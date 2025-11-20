@@ -19,6 +19,16 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     };
     
     commands.insert_resource(textures);
+    
+    // Load audio
+    let audio = GameAudio {
+        player_shoot: asset_server.load("sounds/player_shoot.wav"),
+        enemy_shoot: asset_server.load("sounds/enemy_shoot.wav"),
+        enemy_destroyed: asset_server.load("sounds/enemy_destroyed.wav"),
+        player_destroyed: asset_server.load("sounds/player_destroyed.wav"),
+    };
+    
+    commands.insert_resource(audio);
 }
 
 /// Spawn the player ship and score UI

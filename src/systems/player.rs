@@ -35,6 +35,7 @@ pub fn player_shoot(
     mut commands: Commands,
     query: Query<&Transform, With<Player>>,
     textures: Res<GameTextures>,
+    audio: Res<GameAudio>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Space)
         && let Ok(transform) = query.single()
@@ -55,6 +56,12 @@ pub fn player_shoot(
                 x: 0.0,
                 y: BULLET_SPEED,
             },
+        ));
+        
+        // Play shoot sound
+        commands.spawn((
+            AudioPlayer::new(audio.player_shoot.clone()),
+            PlaybackSettings::DESPAWN,
         ));
     }
 }

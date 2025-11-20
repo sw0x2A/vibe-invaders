@@ -1,15 +1,19 @@
+pub mod background;
 pub mod bullet;
 pub mod collision;
 pub mod enemy;
+pub mod explosion;
 pub mod player;
 pub mod screens;
 pub mod setup;
 pub mod ui;
 pub mod victory;
 
+pub use background::*;
 pub use bullet::*;
 pub use collision::*;
 pub use enemy::*;
+pub use explosion::*;
 pub use player::*;
 pub use screens::*;
 pub use setup::*;

@@ -25,3 +25,9 @@ pub const STAR_MIN_SIZE: f32 = 1.0;
 pub const STAR_MAX_SIZE: f32 = 4.0;
 pub const STAR_MIN_BRIGHTNESS: f32 = 0.3;
 pub const STAR_MAX_BRIGHTNESS: f32 = 1.0;
+
+// Explosion constants
+pub const EXPLOSION_PARTICLES: usize = 20;
+pub const EXPLOSION_LIFETIME: f32 = 0.8;
+pub const EXPLOSION_PARTICLE_SPEED: f32 = 200.0;
+pub const EXPLOSION_PARTICLE_SIZE: f32 = 3.0;

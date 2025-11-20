@@ -40,6 +40,12 @@ pub struct GameOverUI;
 /// Star component for animated starfield background
 #[derive(Component)]
 pub struct Star {
-    pub speed: f32,
     pub distance_from_center: f32,
+}
+
+/// Explosion particle component
+#[derive(Component)]
+pub struct ExplosionParticle {
+    pub lifetime: f32,
+    pub max_lifetime: f32,
 }

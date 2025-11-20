@@ -38,18 +38,28 @@ fn main() {
         .add_systems(
             Update,
             (
+                // Background systems
+                spawn_stars,
+                move_stars,
+                // Explosion system
+                update_explosions,
+                // Player systems
                 player_movement,
                 player_shoot,
+                // Bullet systems
                 move_bullets,
                 move_enemy_bullets,
+                cleanup_offscreen_bullets,
+                // Enemy systems
                 move_enemies,
                 enemy_shoot,
+                // Collision systems
                 check_bullet_enemy_collision,
                 check_bullet_player_collision,
                 check_enemy_reached_bottom,
                 check_all_enemies_destroyed,
+                // UI systems
                 update_score_display,
-                cleanup_offscreen_bullets,
             ).run_if(in_state(GamePhase::Playing)),
         )
         .add_systems(OnExit(GamePhase::Playing), cleanup_game_entities)

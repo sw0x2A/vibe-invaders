@@ -15,6 +15,7 @@ pub struct GameState {
     pub score: u32,
     pub enemy_direction: f32,
     pub enemy_shoot_timer: f32,
+    pub star_spawn_timer: f32,
     pub victory: bool,
 }
 
@@ -24,6 +25,7 @@ impl Default for GameState {
             score: 0,
             enemy_direction: 1.0,
             enemy_shoot_timer: 0.0,
+            star_spawn_timer: 0.0,
             victory: false,
         }
     }
@@ -34,6 +36,7 @@ impl GameState {
         self.score = 0;
         self.enemy_direction = 1.0;
         self.enemy_shoot_timer = 0.0;
+        self.star_spawn_timer = 0.0;
         self.victory = false;
     }
 }
@@ -47,4 +50,13 @@ pub struct GameTextures {
     pub enemy3: Handle<Image>,
     pub bullet: Handle<Image>,
     pub enemy_bullet: Handle<Image>,
+}
+
+/// Audio handles resource
+#[derive(Resource)]
+pub struct GameAudio {
+    pub player_shoot: Handle<AudioSource>,
+    pub enemy_shoot: Handle<AudioSource>,
+    pub enemy_destroyed: Handle<AudioSource>,
+    pub player_destroyed: Handle<AudioSource>,
 }
