@@ -14,6 +14,7 @@ pub fn setup_start_screen(mut commands: Commands) {
             ..default()
         },
         TextColor(Color::srgb(0.0, 1.0, 0.5)),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(150.0),
@@ -31,6 +32,7 @@ pub fn setup_start_screen(mut commands: Commands) {
             ..default()
         },
         TextColor(Color::WHITE),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(300.0),
@@ -48,6 +50,7 @@ pub fn setup_start_screen(mut commands: Commands) {
             ..default()
         },
         TextColor(Color::srgb(0.7, 0.7, 0.7)),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(400.0),
@@ -91,6 +94,7 @@ pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>
             ..default()
         },
         TextColor(title_color),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(150.0),
@@ -108,6 +112,7 @@ pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>
             ..default()
         },
         TextColor(Color::WHITE),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(250.0),
@@ -125,6 +130,7 @@ pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>
             ..default()
         },
         TextColor(Color::srgb(0.7, 0.7, 0.7)),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(350.0),
