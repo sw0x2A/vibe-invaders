@@ -17,3 +17,14 @@ impl Default for GameState {
         }
     }
 }
+
+/// Texture handles resource
+#[derive(Resource)]
+pub struct GameTextures {
+    pub player: Handle<Image>,
+    pub enemy1: Handle<Image>,
+    pub enemy2: Handle<Image>,
+    pub enemy3: Handle<Image>,
+    pub bullet: Handle<Image>,
+    pub enemy_bullet: Handle<Image>,
+}
