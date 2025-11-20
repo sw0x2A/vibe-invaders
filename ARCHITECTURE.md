@@ -2,7 +2,33 @@
 
 ## ECS Pattern in Vibe Invaders
 
-This document explains how the Entity Component System (ECS) pattern is implemented in the game.
+This document explains how the Entity Component System (ECS) pattern is implemented in the game using **Bevy 0.17** and **Rust 2024 edition**.
+
+## Code Organization
+
+The codebase is organized into separate modules for better maintainability:
+
+```
+src/
+├── main.rs            # App setup, plugin configuration, system registration
+├── components.rs      # All component definitions (Player, Enemy, Bullet, etc.)
+├── constants.rs       # Game constants (sizes, speeds, window dimensions)
+├── resources.rs       # Resource definitions (GameState)
+└── systems/           # System implementations organized by category
+    ├── mod.rs         # Module exports
+    ├── setup.rs       # Initialization systems (spawn entities, camera)
+    ├── player.rs      # Player movement and shooting systems
+    ├── enemy.rs       # Enemy movement, shooting, and game over checks
+    ├── bullet.rs      # Bullet movement and cleanup systems
+    ├── collision.rs   # Collision detection systems
+    └── ui.rs          # UI update systems (score display)
+```
+
+This modular structure provides:
+- **Clear separation of concerns**: Each file has a specific responsibility
+- **Easy navigation**: Find related code quickly
+- **Better maintainability**: Changes are localized to relevant modules
+- **Scalability**: Easy to add new features without cluttering existing files
 
 ### Entities
 Entities are created by spawning bundles in Bevy:

@@ -4,6 +4,8 @@ Space Invaders clone in Rust using Bevy engine
 ## Description
 A classic Space Invaders game implemented in Rust using the Bevy game engine, following Entity Component System (ECS) architecture principles.
 
+Built with **Rust 2024 edition** and **Bevy 0.17**, featuring a clean modular architecture with separated concerns.
+
 ## Features
 - **Player-controlled ship**: Move left/right with arrow keys or A/D
 - **Shooting mechanics**: Press SPACE to shoot
@@ -35,7 +37,23 @@ cargo run --release
 ```
 
 ## Architecture
-The game follows ECS (Entity Component System) principles using Bevy.
+The game follows ECS (Entity Component System) principles using Bevy 0.17.
+
+### Code Structure
+```
+src/
+├── main.rs            # App setup and configuration
+├── components.rs      # Component definitions
+├── constants.rs       # Game constants
+├── resources.rs       # Resource definitions (GameState)
+└── systems/           # System implementations
+    ├── setup.rs       # Initialization systems
+    ├── player.rs      # Player movement and shooting
+    ├── enemy.rs       # Enemy movement and shooting
+    ├── bullet.rs      # Bullet movement and cleanup
+    ├── collision.rs   # Collision detection
+    └── ui.rs          # UI updates
+```
 
 For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
@@ -48,6 +66,8 @@ For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).
 **Resources**: GameState (tracks score, enemy direction, timers)
 
 ## Technical Details
+- Rust Edition: 2024
+- Bevy Version: 0.17
 - Window size: 800×600
 - Player speed: 300 units/second
 - Bullet speed: 400 units/second
