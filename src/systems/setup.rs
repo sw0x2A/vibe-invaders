@@ -24,7 +24,11 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 /// Spawn the player ship and score UI
 pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>) {
     commands.spawn((
-        Sprite::from_image(textures.player.clone()),
+        Sprite {
+            image: textures.player.clone(),
+            custom_size: Some(Vec2::new(PLAYER_SIZE, PLAYER_SIZE)),
+            ..default()
+        },
         Transform::from_xyz(0.0, -WINDOW_HEIGHT / 2.0 + 50.0, 0.0),
         Player,
     ));
@@ -65,7 +69,11 @@ pub fn spawn_enemies(mut commands: Commands, textures: Res<GameTextures>) {
             };
 
             commands.spawn((
-                Sprite::from_image(enemy_texture),
+                Sprite {
+                    image: enemy_texture,
+                    custom_size: Some(Vec2::new(ENEMY_SIZE, ENEMY_SIZE)),
+                    ..default()
+                },
                 Transform::from_xyz(x, y, 0.0),
                 Enemy { original_x: x },
                 Velocity {

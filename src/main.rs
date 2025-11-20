@@ -26,9 +26,15 @@ fn main() {
                 ..default()
             })
         )
+        .init_state::<GamePhase>()
         .init_resource::<GameState>()
         .add_systems(Startup, setup)
-        .add_systems(Startup, (spawn_player, spawn_enemies).after(setup))
+        // Start screen systems
+        .add_systems(OnEnter(GamePhase::StartScreen), setup_start_screen)
+        .add_systems(Update, start_screen_input.run_if(in_state(GamePhase::StartScreen)))
+        .add_systems(OnExit(GamePhase::StartScreen), cleanup_start_screen)
+        // Game playing systems
+        .add_systems(OnEnter(GamePhase::Playing), (spawn_player, spawn_enemies))
         .add_systems(
             Update,
             (
@@ -41,9 +47,15 @@ fn main() {
                 check_bullet_enemy_collision,
                 check_bullet_player_collision,
                 check_enemy_reached_bottom,
+                check_all_enemies_destroyed,
                 update_score_display,
                 cleanup_offscreen_bullets,
-            ),
+            ).run_if(in_state(GamePhase::Playing)),
         )
+        .add_systems(OnExit(GamePhase::Playing), cleanup_game_entities)
+        // Game over systems
+        .add_systems(OnEnter(GamePhase::GameOver), setup_game_over_screen)
+        .add_systems(Update, game_over_screen_input.run_if(in_state(GamePhase::GameOver)))
+        .add_systems(OnExit(GamePhase::GameOver), cleanup_game_over_screen)
         .run();
 }

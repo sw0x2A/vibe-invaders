@@ -30,9 +30,10 @@ pub fn check_bullet_enemy_collision(
 pub fn check_bullet_player_collision(
     mut commands: Commands,
     bullet_query: Query<(Entity, &Transform), With<EnemyBullet>>,
-    player_query: Query<(Entity, &Transform), With<Player>>,
+    player_query: Query<&Transform, With<Player>>,
+    mut next_state: ResMut<NextState<GamePhase>>,
 ) {
-    if let Ok((_player_entity, player_transform)) = player_query.single() {
+    if let Ok(player_transform) = player_query.single() {
         for (bullet_entity, bullet_transform) in bullet_query.iter() {
             let distance = bullet_transform
                 .translation
@@ -40,8 +41,8 @@ pub fn check_bullet_player_collision(
 
             if distance < (BULLET_SIZE + PLAYER_SIZE) / 2.0 {
                 commands.entity(bullet_entity).despawn();
-                // In a full game, you'd handle game over here
-                println!("Player hit! Game Over!");
+                next_state.set(GamePhase::GameOver);
+                break;
             }
         }
     }
