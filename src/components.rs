@@ -36,3 +36,10 @@ pub struct StartScreenUI;
 /// Game over screen UI component marker
 #[derive(Component)]
 pub struct GameOverUI;
+
+/// Star component for animated starfield background
+#[derive(Component)]
+pub struct Star {
+    pub speed: f32,
+    pub distance_from_center: f32,
+}

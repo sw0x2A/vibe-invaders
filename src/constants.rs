@@ -17,3 +17,11 @@ pub const ENEMY_ROWS: usize = 5;
 pub const ENEMY_COLS: usize = 11;
 pub const ENEMY_SPACING: f32 = 60.0;
 pub const ENEMY_SHOOT_INTERVAL: f32 = 2.0;
+
+// Starfield constants
+pub const STAR_SPAWN_INTERVAL: f32 = 0.05; // Spawn stars frequently
+pub const STAR_BASE_SPEED: f32 = 150.0;
+pub const STAR_MIN_SIZE: f32 = 1.0;
+pub const STAR_MAX_SIZE: f32 = 4.0;
+pub const STAR_MIN_BRIGHTNESS: f32 = 0.3;
+pub const STAR_MAX_BRIGHTNESS: f32 = 1.0;
