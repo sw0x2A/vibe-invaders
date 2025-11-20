@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::components::*;
 use crate::constants::*;
+use crate::resources::*;
 
 /// Handle player movement
 pub fn player_movement(
@@ -33,16 +34,13 @@ pub fn player_shoot(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut commands: Commands,
     query: Query<&Transform, With<Player>>,
+    textures: Res<GameTextures>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Space)
         && let Ok(transform) = query.single()
     {
         commands.spawn((
-            Sprite {
-                color: Color::srgb(1.0, 1.0, 0.0),
-                custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE * 2.0)),
-                ..default()
-            },
+            Sprite::from_image(textures.bullet.clone()),
             Transform::from_xyz(
                 transform.translation.x,
                 transform.translation.y + PLAYER_SIZE / 2.0,

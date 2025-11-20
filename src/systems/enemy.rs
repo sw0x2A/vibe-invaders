@@ -45,6 +45,7 @@ pub fn enemy_shoot(
     query: Query<&Transform, With<Enemy>>,
     mut game_state: ResMut<GameState>,
     time: Res<Time>,
+    textures: Res<GameTextures>,
 ) {
     game_state.enemy_shoot_timer += time.delta_secs();
 
@@ -59,11 +60,7 @@ pub fn enemy_shoot(
             let enemy_transform = enemies[index];
 
             commands.spawn((
-                Sprite {
-                    color: Color::srgb(1.0, 0.5, 0.0),
-                    custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE * 2.0)),
-                    ..default()
-                },
+                Sprite::from_image(textures.enemy_bullet.clone()),
                 Transform::from_xyz(
                     enemy_transform.translation.x,
                     enemy_transform.translation.y - ENEMY_SIZE / 2.0,
