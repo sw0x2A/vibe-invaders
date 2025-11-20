@@ -27,7 +27,8 @@ fn main() {
             })
         )
         .init_resource::<GameState>()
-        .add_systems(Startup, (setup, spawn_player, spawn_enemies))
+        .add_systems(Startup, setup)
+        .add_systems(Startup, (spawn_player, spawn_enemies).after(setup))
         .add_systems(
             Update,
             (
