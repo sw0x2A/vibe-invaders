@@ -47,6 +47,7 @@ fn main() {
                 check_bullet_enemy_collision,
                 check_bullet_player_collision,
                 check_enemy_reached_bottom,
+                check_all_enemies_destroyed,
                 update_score_display,
                 cleanup_offscreen_bullets,
             ).run_if(in_state(GamePhase::Playing)),

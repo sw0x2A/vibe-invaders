@@ -5,6 +5,7 @@ pub mod player;
 pub mod screens;
 pub mod setup;
 pub mod ui;
+pub mod victory;
 
 pub use bullet::*;
 pub use collision::*;
@@ -13,3 +14,4 @@ pub use player::*;
 pub use screens::*;
 pub use setup::*;
 pub use ui::*;
+pub use victory::*;

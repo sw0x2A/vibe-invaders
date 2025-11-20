@@ -77,14 +77,20 @@ pub fn cleanup_start_screen(mut commands: Commands, query: Query<Entity, With<St
 
 /// Setup game over screen
 pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>) {
-    // Game over text
+    let (title, title_color) = if game_state.victory {
+        ("VICTORY!", Color::srgb(0.0, 1.0, 0.0))
+    } else {
+        ("GAME OVER", Color::srgb(1.0, 0.0, 0.0))
+    };
+
+    // Game over or victory text
     commands.spawn((
-        Text::new("GAME OVER"),
+        Text::new(title),
         TextFont {
             font_size: 60.0,
             ..default()
         },
-        TextColor(Color::srgb(1.0, 0.0, 0.0)),
+        TextColor(title_color),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(150.0),
