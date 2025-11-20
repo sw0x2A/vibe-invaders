@@ -11,16 +11,20 @@ The codebase is organized into separate modules for better maintainability:
 ```
 src/
 ├── main.rs            # App setup, plugin configuration, system registration
-├── components.rs      # All component definitions (Player, Enemy, Bullet, etc.)
-├── constants.rs       # Game constants (sizes, speeds, window dimensions)
-├── resources.rs       # Resource definitions (GameState)
+├── components.rs      # All component definitions (Player, Enemy, Bullet, Star, etc.)
+├── constants.rs       # Game constants (sizes, speeds, window dimensions, star/explosion params)
+├── resources.rs       # Resource definitions (GameState, GameTextures, GameAudio)
 └── systems/           # System implementations organized by category
     ├── mod.rs         # Module exports
-    ├── setup.rs       # Initialization systems (spawn entities, camera)
+    ├── setup.rs       # Initialization systems (spawn entities, camera, load assets)
     ├── player.rs      # Player movement and shooting systems
     ├── enemy.rs       # Enemy movement, shooting, and game over checks
     ├── bullet.rs      # Bullet movement and cleanup systems
-    ├── collision.rs   # Collision detection systems
+    ├── collision.rs   # Collision detection systems with explosion and sound effects
+    ├── background.rs  # Starfield animation (spawn and move stars)
+    ├── explosion.rs   # Explosion particle effects
+    ├── screens.rs     # Start screen, game over screen
+    ├── victory.rs     # Victory condition checks
     └── ui.rs          # UI update systems (score display)
 ```
 
@@ -32,11 +36,14 @@ This modular structure provides:
 
 ### Entities
 Entities are created by spawning bundles in Bevy:
-- **Player Ship**: A single entity with Player component
-- **Enemy Ships**: 55 entities (5 rows × 11 columns) with Enemy component
-- **Player Bullets**: Created when player shoots, with Bullet component
-- **Enemy Bullets**: Created by random enemies, with EnemyBullet component
+- **Player Ship**: A single entity with Player component (blue triangle sprite)
+- **Enemy Ships**: 55 entities (5 rows × 11 columns) with Enemy component (3 types with different colors)
+- **Player Bullets**: Created when player shoots, with Bullet component (cyan)
+- **Enemy Bullets**: Created by random enemies, with EnemyBullet component (red)
+- **Stars**: Continuously spawned for animated background, with Star component
+- **Explosion Particles**: Created on destruction, with ExplosionParticle component
 - **UI Elements**: Score display text entity
+- **Audio Players**: Temporary entities for sound playback
 
 ### Components
 Components are pure data structures attached to entities:
@@ -48,31 +55,38 @@ Bullet              // Marker for player bullets
 EnemyBullet         // Marker for enemy bullets
 Velocity            // Movement data (x, y velocity)
 Score               // Marker for score UI
+Star                // Starfield star data (distance_from_center)
+ExplosionParticle   // Explosion particle data (lifetime, max_lifetime)
 ```
 
 Additionally, Bevy built-in components:
 - `Transform`: Position, rotation, scale
-- `Sprite`: Visual representation
+- `Sprite`: Visual representation with color and size
 - `Text`: UI text rendering
+- `AudioPlayer`: Audio playback
 
 ### Systems
 Systems are functions that operate on entities with specific components:
 
 #### Initialization Systems (Startup)
-- `setup`: Creates camera
+- `setup`: Creates camera, loads textures and audio assets
 - `spawn_player`: Creates player entity and score UI
-- `spawn_enemies`: Creates enemy formation
+- `spawn_enemies`: Creates enemy formation (3 different types)
 
 #### Update Systems (Every Frame)
+- `spawn_stars`: Spawns stars from center at regular intervals
+- `move_stars`: Moves stars outward, updates size and brightness based on distance
+- `update_explosions`: Animates explosion particles with fade-out
 - `player_movement`: Reads keyboard input, updates Player Transform
-- `player_shoot`: Spawns Bullet entities on Space key
+- `player_shoot`: Spawns Bullet entities on Space key with sound effect
 - `move_bullets`: Updates Bullet Transform based on Velocity
 - `move_enemy_bullets`: Updates EnemyBullet Transform
 - `move_enemies`: Updates Enemy positions, handles direction changes
-- `enemy_shoot`: Randomly spawns EnemyBullet from enemies
-- `check_bullet_enemy_collision`: Detects hits, updates score
-- `check_bullet_player_collision`: Detects player damage
+- `enemy_shoot`: Randomly spawns EnemyBullet from enemies with sound effect
+- `check_bullet_enemy_collision`: Detects hits, spawns explosions, plays sound, updates score
+- `check_bullet_player_collision`: Detects player damage, spawns explosion, plays sound
 - `check_enemy_reached_bottom`: Game over condition
+- `check_all_enemies_destroyed`: Victory condition
 - `update_score_display`: Updates score Text
 - `cleanup_offscreen_bullets`: Removes bullets off-screen
 
@@ -84,6 +98,24 @@ GameState {
     score: u32,              // Player's current score
     enemy_direction: f32,    // Direction enemies are moving (1.0 or -1.0)
     enemy_shoot_timer: f32,  // Timer for enemy shooting
+    star_spawn_timer: f32,   // Timer for star spawning
+    victory: bool,           // Victory state flag
+}
+
+GameTextures {
+    player: Handle<Image>,        // Player sprite
+    enemy1: Handle<Image>,        // Enemy type 1 sprite (purple)
+    enemy2: Handle<Image>,        // Enemy type 2 sprite (orange)
+    enemy3: Handle<Image>,        // Enemy type 3 sprite (green)
+    bullet: Handle<Image>,        // Player bullet sprite (cyan)
+    enemy_bullet: Handle<Image>,  // Enemy bullet sprite (red)
+}
+
+GameAudio {
+    player_shoot: Handle<AudioSource>,      // Player shooting sound
+    enemy_shoot: Handle<AudioSource>,       // Enemy shooting sound
+    enemy_destroyed: Handle<AudioSource>,   // Enemy explosion sound
+    player_destroyed: Handle<AudioSource>,  // Player explosion sound
 }
 ```
 
