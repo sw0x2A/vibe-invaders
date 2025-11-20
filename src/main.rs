@@ -106,7 +106,7 @@ fn spawn_player(mut commands: Commands) {
         },
         Player,
     ));
-    
+
     // Spawn score text
     commands.spawn((
         TextBundle::from_section(
@@ -130,12 +130,12 @@ fn spawn_player(mut commands: Commands) {
 fn spawn_enemies(mut commands: Commands) {
     let start_x = -(ENEMY_COLS as f32 - 1.0) * ENEMY_SPACING / 2.0;
     let start_y = WINDOW_HEIGHT / 2.0 - 100.0;
-    
+
     for row in 0..ENEMY_ROWS {
         for col in 0..ENEMY_COLS {
             let x = start_x + col as f32 * ENEMY_SPACING;
             let y = start_y - row as f32 * ENEMY_SPACING;
-            
+
             commands.spawn((
                 SpriteBundle {
                     sprite: Sprite {
@@ -147,7 +147,10 @@ fn spawn_enemies(mut commands: Commands) {
                     ..default()
                 },
                 Enemy { original_x: x },
-                Velocity { x: ENEMY_SPEED, y: 0.0 },
+                Velocity {
+                    x: ENEMY_SPEED,
+                    y: 0.0,
+                },
             ));
         }
     }
@@ -160,14 +163,14 @@ fn player_movement(
 ) {
     if let Ok(mut transform) = query.get_single_mut() {
         let mut direction = 0.0;
-        
+
         if keyboard_input.pressed(KeyCode::ArrowLeft) || keyboard_input.pressed(KeyCode::KeyA) {
             direction -= 1.0;
         }
         if keyboard_input.pressed(KeyCode::ArrowRight) || keyboard_input.pressed(KeyCode::KeyD) {
             direction += 1.0;
         }
-        
+
         let new_x = transform.translation.x + direction * PLAYER_SPEED * time.delta_seconds();
         let half_player = PLAYER_SIZE / 2.0;
         transform.translation.x = new_x.clamp(
@@ -199,16 +202,16 @@ fn player_shoot(
                     ..default()
                 },
                 Bullet,
-                Velocity { x: 0.0, y: BULLET_SPEED },
+                Velocity {
+                    x: 0.0,
+                    y: BULLET_SPEED,
+                },
             ));
         }
     }
 }
 
-fn move_bullets(
-    mut query: Query<(&mut Transform, &Velocity), With<Bullet>>,
-    time: Res<Time>,
-) {
+fn move_bullets(mut query: Query<(&mut Transform, &Velocity), With<Bullet>>, time: Res<Time>) {
     for (mut transform, velocity) in query.iter_mut() {
         transform.translation.y += velocity.y * time.delta_seconds();
     }
@@ -230,7 +233,7 @@ fn move_enemies(
 ) {
     let mut should_move_down = false;
     let mut reverse_direction = false;
-    
+
     // Check if any enemy hit the edge
     for (transform, _, enemy) in query.iter() {
         let offset = transform.translation.x - enemy.original_x;
@@ -240,16 +243,16 @@ fn move_enemies(
             break;
         }
     }
-    
+
     if reverse_direction {
         game_state.enemy_direction *= -1.0;
     }
-    
+
     // Move enemies
     for (mut transform, mut velocity, _) in query.iter_mut() {
         velocity.x = ENEMY_SPEED * game_state.enemy_direction;
         transform.translation.x += velocity.x * time.delta_seconds();
-        
+
         if should_move_down {
             transform.translation.y -= 20.0;
         }
@@ -263,17 +266,17 @@ fn enemy_shoot(
     time: Res<Time>,
 ) {
     game_state.enemy_shoot_timer += time.delta_seconds();
-    
+
     if game_state.enemy_shoot_timer >= ENEMY_SHOOT_INTERVAL {
         game_state.enemy_shoot_timer = 0.0;
-        
+
         // Pick a random enemy to shoot
         let enemies: Vec<&Transform> = query.iter().collect();
         if !enemies.is_empty() {
             let mut rng = rand::thread_rng();
             let index = rng.gen_range(0..enemies.len());
             let enemy_transform = enemies[index];
-            
+
             commands.spawn((
                 SpriteBundle {
                     sprite: Sprite {
@@ -289,7 +292,10 @@ fn enemy_shoot(
                     ..default()
                 },
                 EnemyBullet,
-                Velocity { x: 0.0, y: -BULLET_SPEED },
+                Velocity {
+                    x: 0.0,
+                    y: -BULLET_SPEED,
+                },
             ));
         }
     }
@@ -306,7 +312,7 @@ fn check_bullet_enemy_collision(
             let distance = bullet_transform
                 .translation
                 .distance(enemy_transform.translation);
-            
+
             if distance < (BULLET_SIZE + ENEMY_SIZE) / 2.0 {
                 commands.entity(bullet_entity).despawn();
                 commands.entity(enemy_entity).despawn();
@@ -326,7 +332,7 @@ fn check_bullet_player_collision(
             let distance = bullet_transform
                 .translation
                 .distance(player_transform.translation);
-            
+
             if distance < (BULLET_SIZE + PLAYER_SIZE) / 2.0 {
                 commands.entity(bullet_entity).despawn();
                 // In a full game, you'd handle game over here
@@ -336,9 +342,7 @@ fn check_bullet_player_collision(
     }
 }
 
-fn check_enemy_reached_bottom(
-    query: Query<&Transform, With<Enemy>>,
-) {
+fn check_enemy_reached_bottom(query: Query<&Transform, With<Enemy>>) {
     for transform in query.iter() {
         if transform.translation.y < -WINDOW_HEIGHT / 2.0 + 50.0 {
             println!("Enemies reached the bottom! Game Over!");
@@ -347,10 +351,7 @@ fn check_enemy_reached_bottom(
     }
 }
 
-fn update_score_display(
-    game_state: Res<GameState>,
-    mut query: Query<&mut Text, With<Score>>,
-) {
+fn update_score_display(game_state: Res<GameState>, mut query: Query<&mut Text, With<Score>>) {
     if game_state.is_changed() {
         for mut text in query.iter_mut() {
             text.sections[0].value = format!("Score: {}", game_state.score);
@@ -368,7 +369,7 @@ fn cleanup_offscreen_bullets(
             commands.entity(entity).despawn();
         }
     }
-    
+
     for (entity, transform) in enemy_bullet_query.iter() {
         if transform.translation.y < -WINDOW_HEIGHT / 2.0 - 10.0 {
             commands.entity(entity).despawn();
