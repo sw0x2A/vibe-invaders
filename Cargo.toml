@@ -9,11 +9,22 @@ bevy = { version = "0.17", default-features = false, features = [
     "bevy_core_pipeline",
     "bevy_render",
     "bevy_sprite",
+    "bevy_sprite_render",
     "bevy_text",
     "bevy_ui",
+    "bevy_ui_render",
     "bevy_state",
-    "x11",
+    "bevy_asset",
+    "bevy_color",
+    "bevy_window",
+    "bevy_camera",
+    "bevy_image",
+    "bevy_mesh",
+    "bevy_shader",
+    "default_font",
     "png",
+    "x11",
+    "multi_threaded",
 ] }
 rand = "0.8"
 
