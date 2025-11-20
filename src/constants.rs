@@ -25,6 +25,7 @@ pub const STAR_MIN_SIZE: f32 = 1.0;
 pub const STAR_MAX_SIZE: f32 = 4.0;
 pub const STAR_MIN_BRIGHTNESS: f32 = 0.3;
 pub const STAR_MAX_BRIGHTNESS: f32 = 1.0;
+pub const STAR_MAX_DISTANCE: f32 = 721.11; // Pre-calculated: sqrt((800/2)^2 + (600/2)^2)
 
 // Explosion constants
 pub const EXPLOSION_PARTICLES: usize = 20;

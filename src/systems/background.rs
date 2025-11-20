@@ -62,8 +62,7 @@ pub fn move_stars(
         star.distance_from_center = (transform.translation.x.powi(2) + transform.translation.y.powi(2)).sqrt();
 
         // Calculate progress based on distance (0.0 at center, 1.0 at max distance)
-        let max_distance = ((WINDOW_WIDTH / 2.0).powi(2) + (WINDOW_HEIGHT / 2.0).powi(2)).sqrt();
-        let progress = (star.distance_from_center / max_distance).min(1.0);
+        let progress = (star.distance_from_center / STAR_MAX_DISTANCE).min(1.0);
 
         // Increase size as star moves outward
         let size = STAR_MIN_SIZE + (STAR_MAX_SIZE - STAR_MIN_SIZE) * progress;

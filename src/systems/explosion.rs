@@ -20,10 +20,11 @@ pub fn spawn_explosion(commands: &mut Commands, position: Vec3, color: Color) {
         
         // Slight color variation
         let color_variation = rng.gen_range(0.8..1.2);
+        let base_color = color.to_srgba();
         let particle_color = Color::srgb(
-            (color.to_srgba().red * color_variation).min(1.0),
-            (color.to_srgba().green * color_variation).min(1.0),
-            (color.to_srgba().blue * color_variation).min(1.0),
+            (base_color.red * color_variation).min(1.0),
+            (base_color.green * color_variation).min(1.0),
+            (base_color.blue * color_variation).min(1.0),
         );
 
         commands.spawn((
