@@ -41,6 +41,7 @@ pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>) {
             ..default()
         },
         TextColor(Color::WHITE),
+        TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(10.0),
