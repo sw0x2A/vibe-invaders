@@ -35,31 +35,17 @@ cargo run --release
 ```
 
 ## Architecture
-The game follows ECS (Entity Component System) principles using Bevy:
+The game follows ECS (Entity Component System) principles using Bevy.
 
-### Components
-- `Player`: Player ship component
-- `Enemy`: Enemy invader component with position tracking
-- `Bullet`: Player bullet component
-- `EnemyBullet`: Enemy bullet component
-- `Velocity`: Movement velocity component
-- `Score`: Score display component
+For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
-### Systems
-- `player_movement`: Handles player ship movement
-- `player_shoot`: Creates bullets when player shoots
-- `move_bullets`: Updates bullet positions
-- `move_enemy_bullets`: Updates enemy bullet positions
-- `move_enemies`: Controls enemy formation movement
-- `enemy_shoot`: Randomly selects enemies to shoot
-- `check_bullet_enemy_collision`: Detects and handles player bullet hits
-- `check_bullet_player_collision`: Detects and handles enemy bullet hits
-- `check_enemy_reached_bottom`: Checks for game over condition
-- `update_score_display`: Updates score UI
-- `cleanup_offscreen_bullets`: Removes bullets that leave the screen
+### Quick Overview
 
-### Resources
-- `GameState`: Tracks score, enemy direction, and shooting timers
+**Components**: Player, Enemy, Bullet, EnemyBullet, Velocity, Score
+
+**Systems**: player_movement, player_shoot, move_bullets, move_enemies, enemy_shoot, collision detection, score updates, cleanup
+
+**Resources**: GameState (tracks score, enemy direction, timers)
 
 ## Technical Details
 - Window size: 800×600
