@@ -152,10 +152,17 @@ pub fn game_over_screen_input(
 }
 
 /// Cleanup game over screen
-pub fn cleanup_game_over_screen(mut commands: Commands, query: Query<Entity, With<GameOverUI>>) {
+pub fn cleanup_game_over_screen(
+    mut commands: Commands,
+    query: Query<Entity, With<GameOverUI>>,
+    mut game_state: ResMut<GameState>,
+) {
     for entity in query.iter() {
         commands.entity(entity).despawn();
     }
+    
+    // Reset game state for next game
+    game_state.reset();
 }
 
 /// Cleanup game entities (player, enemies, bullets)
@@ -166,7 +173,6 @@ pub fn cleanup_game_entities(
     bullet_query: Query<Entity, With<Bullet>>,
     enemy_bullet_query: Query<Entity, With<EnemyBullet>>,
     score_query: Query<Entity, With<Score>>,
-    mut game_state: ResMut<GameState>,
 ) {
     // Despawn player
     for entity in player_query.iter() {
@@ -192,7 +198,4 @@ pub fn cleanup_game_entities(
     for entity in score_query.iter() {
         commands.entity(entity).despawn();
     }
-    
-    // Reset game state
-    game_state.reset();
 }
