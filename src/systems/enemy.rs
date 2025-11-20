@@ -60,7 +60,11 @@ pub fn enemy_shoot(
             let enemy_transform = enemies[index];
 
             commands.spawn((
-                Sprite::from_image(textures.enemy_bullet.clone()),
+                Sprite {
+                    image: textures.enemy_bullet.clone(),
+                    custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE * 2.0)),
+                    ..default()
+                },
                 Transform::from_xyz(
                     enemy_transform.translation.x,
                     enemy_transform.translation.y - ENEMY_SIZE / 2.0,
@@ -77,11 +81,14 @@ pub fn enemy_shoot(
 }
 
 /// Check if enemies reached the bottom
-pub fn check_enemy_reached_bottom(query: Query<&Transform, With<Enemy>>) {
+pub fn check_enemy_reached_bottom(
+    query: Query<&Transform, With<Enemy>>,
+    mut next_state: ResMut<NextState<GamePhase>>,
+) {
     for transform in query.iter() {
         if transform.translation.y < -WINDOW_HEIGHT / 2.0 + 50.0 {
-            println!("Enemies reached the bottom! Game Over!");
-            // In a full game, you'd handle game over here
+            next_state.set(GamePhase::GameOver);
+            break;
         }
     }
 }

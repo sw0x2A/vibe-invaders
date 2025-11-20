@@ -28,3 +28,11 @@ pub struct Velocity {
 /// Score UI component marker
 #[derive(Component)]
 pub struct Score;
+
+/// Start screen UI component marker
+#[derive(Component)]
+pub struct StartScreenUI;
+
+/// Game over screen UI component marker
+#[derive(Component)]
+pub struct GameOverUI;

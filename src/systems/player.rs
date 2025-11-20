@@ -40,7 +40,11 @@ pub fn player_shoot(
         && let Ok(transform) = query.single()
     {
         commands.spawn((
-            Sprite::from_image(textures.bullet.clone()),
+            Sprite {
+                image: textures.bullet.clone(),
+                custom_size: Some(Vec2::new(BULLET_SIZE, BULLET_SIZE * 2.0)),
+                ..default()
+            },
             Transform::from_xyz(
                 transform.translation.x,
                 transform.translation.y + PLAYER_SIZE / 2.0,

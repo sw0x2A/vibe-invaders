@@ -1,5 +1,14 @@
 use bevy::prelude::*;
 
+/// Game phase states
+#[derive(Debug, Clone, Copy, Default, Eq, PartialEq, Hash, States)]
+pub enum GamePhase {
+    #[default]
+    StartScreen,
+    Playing,
+    GameOver,
+}
+
 /// Global game state resource
 #[derive(Resource)]
 pub struct GameState {
@@ -15,6 +24,14 @@ impl Default for GameState {
             enemy_direction: 1.0,
             enemy_shoot_timer: 0.0,
         }
+    }
+}
+
+impl GameState {
+    pub fn reset(&mut self) {
+        self.score = 0;
+        self.enemy_direction = 1.0;
+        self.enemy_shoot_timer = 0.0;
     }
 }
 
