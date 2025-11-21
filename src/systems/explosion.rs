@@ -11,13 +11,13 @@ pub fn spawn_explosion(commands: &mut Commands, position: Vec3, color: Color) {
     for _ in 0..EXPLOSION_PARTICLES {
         // Random angle for particle direction
         let angle = rng.random_range(0.0..std::f32::consts::TAU);
-        
+
         // Random speed variation
         let speed = EXPLOSION_PARTICLE_SPEED * rng.random_range(0.5..1.5);
-        
+
         // Random particle size
         let size = EXPLOSION_PARTICLE_SIZE * rng.random_range(0.5..1.5);
-        
+
         // Slight color variation
         let color_variation = rng.random_range(0.8..1.2);
         let base_color = color.to_srgba();
@@ -49,7 +49,13 @@ pub fn spawn_explosion(commands: &mut Commands, position: Vec3, color: Color) {
 /// Update explosion particles
 pub fn update_explosions(
     mut commands: Commands,
-    mut query: Query<(Entity, &mut Transform, &mut Sprite, &mut ExplosionParticle, &Velocity)>,
+    mut query: Query<(
+        Entity,
+        &mut Transform,
+        &mut Sprite,
+        &mut ExplosionParticle,
+        &Velocity,
+    )>,
     time: Res<Time>,
 ) {
     for (entity, mut transform, mut sprite, mut particle, velocity) in query.iter_mut() {

@@ -58,7 +58,7 @@ pub fn player_shoot(
                 y: BULLET_SPEED,
             },
         ));
-        
+
         // Play shoot sound
         commands.spawn((
             AudioPlayer::new(audio.player_shoot.clone()),

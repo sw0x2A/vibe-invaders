@@ -93,9 +93,7 @@ pub struct HighScores {
 
 impl Default for HighScores {
     fn default() -> Self {
-        Self {
-            scores: Vec::new(),
-        }
+        Self { scores: Vec::new() }
     }
 }
 
@@ -105,20 +103,20 @@ impl HighScores {
         for entry in &mut self.scores {
             entry.is_current = false;
         }
-        
+
         // Add new score
         self.scores.push(ScoreEntry {
             score,
             is_current: true,
         });
-        
+
         // Sort by score descending
         self.scores.sort_by(|a, b| b.score.cmp(&a.score));
-        
+
         // Keep only top 5
         self.scores.truncate(5);
     }
-    
+
     pub fn get_top_scores(&self) -> &[ScoreEntry] {
         &self.scores
     }
@@ -144,7 +142,7 @@ impl GameOverTimer {
     pub fn reset(&mut self) {
         self.elapsed = 0.0;
     }
-    
+
     pub fn can_restart(&self) -> bool {
         self.elapsed >= self.required_delay
     }

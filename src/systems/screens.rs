@@ -4,7 +4,7 @@ use crate::components::*;
 use crate::resources::*;
 
 /// Setup start screen
-pub fn setup_start_screen(mut commands: Commands, window_dims: Res<WindowDimensions>) {
+pub fn setup_start_screen(mut commands: Commands) {
     // Title text
     commands.spawn((
         Text::new("VIBE INVADERS"),
@@ -13,11 +13,11 @@ pub fn setup_start_screen(mut commands: Commands, window_dims: Res<WindowDimensi
             ..default()
         },
         TextColor(Color::srgb(0.0, 1.0, 0.5)),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(150.0),
-            left: Val::Px(window_dims.width / 2.0 - 200.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         StartScreenUI,
@@ -31,11 +31,11 @@ pub fn setup_start_screen(mut commands: Commands, window_dims: Res<WindowDimensi
             ..default()
         },
         TextColor(Color::WHITE),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(300.0),
-            left: Val::Px(window_dims.width / 2.0 - 150.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         StartScreenUI,
@@ -49,11 +49,11 @@ pub fn setup_start_screen(mut commands: Commands, window_dims: Res<WindowDimensi
             ..default()
         },
         TextColor(Color::srgb(0.7, 0.7, 0.7)),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(400.0),
-            left: Val::Px(window_dims.width / 2.0 - 150.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         StartScreenUI,
@@ -79,18 +79,18 @@ pub fn cleanup_start_screen(mut commands: Commands, query: Query<Entity, With<St
 
 /// Setup game over screen
 pub fn setup_game_over_screen(
-    mut commands: Commands, 
-    game_state: Res<GameState>, 
+    mut commands: Commands,
+    game_state: Res<GameState>,
     mut high_scores: ResMut<HighScores>,
     mut game_over_timer: ResMut<GameOverTimer>,
     window_dims: Res<WindowDimensions>,
 ) {
     // Reset timer
     game_over_timer.reset();
-    
+
     // Add current score to high scores
     high_scores.add_score(game_state.score);
-    
+
     let (title, title_color) = if game_state.victory {
         ("VICTORY!", Color::srgb(0.0, 1.0, 0.0))
     } else {
@@ -105,11 +105,11 @@ pub fn setup_game_over_screen(
             ..default()
         },
         TextColor(title_color),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(50.0),
-            left: Val::Px(window_dims.width / 2.0 - 180.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         GameOverUI,
@@ -123,11 +123,11 @@ pub fn setup_game_over_screen(
             ..default()
         },
         TextColor(Color::WHITE),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(130.0),
-            left: Val::Px(window_dims.width / 2.0 - 150.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         GameOverUI,
@@ -141,11 +141,11 @@ pub fn setup_game_over_screen(
             ..default()
         },
         TextColor(Color::srgb(1.0, 0.84, 0.0)),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(200.0),
-            left: Val::Px(window_dims.width / 2.0 - 100.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         GameOverUI,
@@ -161,7 +161,7 @@ pub fn setup_game_over_screen(
         } else {
             Color::WHITE
         };
-        
+
         commands.spawn((
             Text::new(score_text),
             TextFont {
@@ -169,11 +169,11 @@ pub fn setup_game_over_screen(
                 ..default()
             },
             TextColor(color),
-            TextLayout::default(),
+            TextLayout::new_with_justify(Justify::Center),
             Node {
                 position_type: PositionType::Absolute,
                 top: Val::Px(y_pos),
-                left: Val::Px(window_dims.width / 2.0 - 60.0),
+                width: Val::Percent(100.0),
                 ..default()
             },
             GameOverUI,
@@ -188,11 +188,11 @@ pub fn setup_game_over_screen(
             ..default()
         },
         TextColor(Color::srgb(0.7, 0.7, 0.7)),
-        TextLayout::default(),
+        TextLayout::new_with_justify(Justify::Center),
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(window_dims.height - 80.0),
-            left: Val::Px(window_dims.width / 2.0 - 150.0),
+            width: Val::Percent(100.0),
             ..default()
         },
         GameOverUI,
@@ -208,7 +208,7 @@ pub fn game_over_screen_input(
 ) {
     // Update timer
     game_over_timer.elapsed += time.delta_secs();
-    
+
     // Only allow restart after delay
     if keyboard_input.just_pressed(KeyCode::Space) && game_over_timer.can_restart() {
         next_state.set(GamePhase::Playing);
@@ -224,7 +224,7 @@ pub fn cleanup_game_over_screen(
     for entity in query.iter() {
         commands.entity(entity).despawn();
     }
-    
+
     // Reset game state for next game
     game_state.reset();
 }
@@ -243,27 +243,27 @@ pub fn cleanup_game_entities(
     for entity in player_query.iter() {
         commands.entity(entity).despawn();
     }
-    
+
     // Despawn enemies
     for entity in enemy_query.iter() {
         commands.entity(entity).despawn();
     }
-    
+
     // Despawn bullets
     for entity in bullet_query.iter() {
         commands.entity(entity).despawn();
     }
-    
+
     // Despawn enemy bullets
     for entity in enemy_bullet_query.iter() {
         commands.entity(entity).despawn();
     }
-    
+
     // Despawn score UI
     for entity in score_query.iter() {
         commands.entity(entity).despawn();
     }
-    
+
     // Despawn background music
     for entity in music_query.iter() {
         commands.entity(entity).despawn();

@@ -77,7 +77,7 @@ pub fn enemy_shoot(
                     y: -BULLET_SPEED,
                 },
             ));
-            
+
             // Play enemy shoot sound
             commands.spawn((
                 AudioPlayer::new(audio.enemy_shoot.clone()),
