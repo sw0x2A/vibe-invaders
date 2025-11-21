@@ -46,6 +46,7 @@ pub fn enemy_shoot(
     mut game_state: ResMut<GameState>,
     time: Res<Time>,
     textures: Res<GameTextures>,
+    audio: Res<GameAudio>,
 ) {
     game_state.enemy_shoot_timer += time.delta_secs();
 
@@ -75,6 +76,12 @@ pub fn enemy_shoot(
                     x: 0.0,
                     y: -BULLET_SPEED,
                 },
+            ));
+            
+            // Play enemy shoot sound
+            commands.spawn((
+                AudioPlayer::new(audio.enemy_shoot.clone()),
+                PlaybackSettings::DESPAWN,
             ));
         }
     }
