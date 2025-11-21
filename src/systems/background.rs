@@ -6,24 +6,20 @@ use crate::constants::*;
 use crate::resources::*;
 
 /// Spawn stars from the center of the screen
-pub fn spawn_stars(
-    mut commands: Commands,
-    mut game_state: ResMut<GameState>,
-    time: Res<Time>,
-) {
+pub fn spawn_stars(mut commands: Commands, mut game_state: ResMut<GameState>, time: Res<Time>) {
     game_state.star_spawn_timer += time.delta_secs();
 
     if game_state.star_spawn_timer >= STAR_SPAWN_INTERVAL {
         game_state.star_spawn_timer = 0.0;
 
         let mut rng = rand::rng();
-        
+
         // Random angle for star direction
         let angle = rng.random_range(0.0..std::f32::consts::TAU);
-        
+
         // Random speed variation
         let speed = STAR_BASE_SPEED * rng.random_range(0.5..1.5);
-        
+
         // Spawn star at center with slight random offset
         let offset = rng.random_range(-10.0..10.0);
         let x = offset * angle.cos();
@@ -55,15 +51,17 @@ pub fn move_stars(
     window_dims: Res<WindowDimensions>,
 ) {
     // Calculate max distance based on current window dimensions
-    let max_distance = ((window_dims.width / 2.0).powi(2) + (window_dims.height / 2.0).powi(2)).sqrt();
-    
+    let max_distance =
+        ((window_dims.width / 2.0).powi(2) + (window_dims.height / 2.0).powi(2)).sqrt();
+
     for (entity, mut transform, mut sprite, mut star, velocity) in query.iter_mut() {
         // Move star
         transform.translation.x += velocity.x * time.delta_secs();
         transform.translation.y += velocity.y * time.delta_secs();
 
         // Calculate distance from center
-        star.distance_from_center = (transform.translation.x.powi(2) + transform.translation.y.powi(2)).sqrt();
+        star.distance_from_center =
+            (transform.translation.x.powi(2) + transform.translation.y.powi(2)).sqrt();
 
         // Calculate progress based on distance (0.0 at center, 1.0 at max distance)
         let progress = (star.distance_from_center / max_distance).min(1.0);
@@ -73,7 +71,8 @@ pub fn move_stars(
         sprite.custom_size = Some(Vec2::new(size, size));
 
         // Increase brightness as star moves outward
-        let brightness = STAR_MIN_BRIGHTNESS + (STAR_MAX_BRIGHTNESS - STAR_MIN_BRIGHTNESS) * progress;
+        let brightness =
+            STAR_MIN_BRIGHTNESS + (STAR_MAX_BRIGHTNESS - STAR_MIN_BRIGHTNESS) * progress;
         sprite.color = Color::srgb(brightness, brightness, brightness);
 
         // Despawn if off-screen

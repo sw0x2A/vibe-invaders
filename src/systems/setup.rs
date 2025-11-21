@@ -8,7 +8,7 @@ use crate::resources::*;
 /// Initialize the camera and load textures
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(Camera2d);
-    
+
     // Load textures
     let textures = GameTextures {
         player: asset_server.load("player.png"),
@@ -18,9 +18,9 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         bullet: asset_server.load("bullet.png"),
         enemy_bullet: asset_server.load("enemy_bullet.png"),
     };
-    
+
     commands.insert_resource(textures);
-    
+
     // Load audio
     let audio = GameAudio {
         player_shoot: asset_server.load("sounds/player_shoot.wav"),
@@ -29,7 +29,7 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         player_destroyed: asset_server.load("sounds/player_destroyed.wav"),
         game_music: asset_server.load("sounds/game_music.wav"),
     };
-    
+
     commands.insert_resource(audio);
 }
 
@@ -45,7 +45,12 @@ pub fn initialize_window_dimensions(
 }
 
 /// Spawn the player ship and score UI
-pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: Res<GameAudio>, window_dims: Res<WindowDimensions>) {
+pub fn spawn_player(
+    mut commands: Commands,
+    textures: Res<GameTextures>,
+    audio: Res<GameAudio>,
+    window_dims: Res<WindowDimensions>,
+) {
     commands.spawn((
         Sprite {
             image: textures.player.clone(),
@@ -73,7 +78,7 @@ pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: 
         },
         Score,
     ));
-    
+
     // Start background music
     commands.spawn((
         AudioPlayer::new(audio.game_music.clone()),
@@ -83,7 +88,11 @@ pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: 
 }
 
 /// Spawn the enemy formation
-pub fn spawn_enemies(mut commands: Commands, textures: Res<GameTextures>, window_dims: Res<WindowDimensions>) {
+pub fn spawn_enemies(
+    mut commands: Commands,
+    textures: Res<GameTextures>,
+    window_dims: Res<WindowDimensions>,
+) {
     let start_x = -(ENEMY_COLS as f32 - 1.0) * ENEMY_SPACING / 2.0;
     let start_y = window_dims.height / 2.0 - 100.0;
 
