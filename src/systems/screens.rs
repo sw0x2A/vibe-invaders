@@ -173,6 +173,7 @@ pub fn cleanup_game_entities(
     bullet_query: Query<Entity, With<Bullet>>,
     enemy_bullet_query: Query<Entity, With<EnemyBullet>>,
     score_query: Query<Entity, With<Score>>,
+    music_query: Query<Entity, With<BackgroundMusic>>,
 ) {
     // Despawn player
     for entity in player_query.iter() {
@@ -196,6 +197,11 @@ pub fn cleanup_game_entities(
     
     // Despawn score UI
     for entity in score_query.iter() {
+        commands.entity(entity).despawn();
+    }
+    
+    // Despawn background music
+    for entity in music_query.iter() {
         commands.entity(entity).despawn();
     }
 }

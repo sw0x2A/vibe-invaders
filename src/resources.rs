@@ -59,4 +59,5 @@ pub struct GameAudio {
     pub enemy_shoot: Handle<AudioSource>,
     pub enemy_destroyed: Handle<AudioSource>,
     pub player_destroyed: Handle<AudioSource>,
+    pub game_music: Handle<AudioSource>,
 }
