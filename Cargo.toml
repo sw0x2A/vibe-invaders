@@ -23,6 +23,7 @@ bevy = { version = "0.17", default-features = false, features = [
     "bevy_shader",
     "bevy_audio",
     "vorbis",
+    "wav",
     "default_font",
     "png",
     "x11",
