@@ -31,7 +31,7 @@ fn main() {
         .init_resource::<WindowDimensions>()
         .init_resource::<HighScores>()
         .init_resource::<GameOverTimer>()
-        .add_systems(Startup, (setup, initialize_window_dimensions))
+        .add_systems(Startup, (setup, initialize_window_dimensions.after(setup)))
         // Start screen systems
         .add_systems(OnEnter(GamePhase::StartScreen), setup_start_screen)
         .add_systems(Update, start_screen_input.run_if(in_state(GamePhase::StartScreen)))
