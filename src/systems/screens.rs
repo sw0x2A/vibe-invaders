@@ -4,7 +4,7 @@ use crate::components::*;
 use crate::resources::*;
 
 /// Setup start screen
-pub fn setup_start_screen(mut commands: Commands, _window_dims: Res<WindowDimensions>) {
+pub fn setup_start_screen(mut commands: Commands) {
     // Title text
     commands.spawn((
         Text::new("VIBE INVADERS"),
