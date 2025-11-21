@@ -9,6 +9,7 @@ pub fn player_movement(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut query: Query<&mut Transform, With<Player>>,
     time: Res<Time>,
+    window_dims: Res<WindowDimensions>,
 ) {
     if let Ok(mut transform) = query.single_mut() {
         let mut direction = 0.0;
@@ -23,8 +24,8 @@ pub fn player_movement(
         let new_x = transform.translation.x + direction * PLAYER_SPEED * time.delta_secs();
         let half_player = PLAYER_SIZE / 2.0;
         transform.translation.x = new_x.clamp(
-            -WINDOW_WIDTH / 2.0 + half_player,
-            WINDOW_WIDTH / 2.0 - half_player,
+            -window_dims.width / 2.0 + half_player,
+            window_dims.width / 2.0 - half_player,
         );
     }
 }

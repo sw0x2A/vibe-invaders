@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 
 use crate::components::*;
 use crate::constants::*;
@@ -32,15 +33,26 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.insert_resource(audio);
 }
 
+/// Initialize window dimensions from actual window size
+pub fn initialize_window_dimensions(
+    mut window_dims: ResMut<WindowDimensions>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+) {
+    if let Ok(window) = window_query.single() {
+        window_dims.width = window.width();
+        window_dims.height = window.height();
+    }
+}
+
 /// Spawn the player ship and score UI
-pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: Res<GameAudio>) {
+pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: Res<GameAudio>, window_dims: Res<WindowDimensions>) {
     commands.spawn((
         Sprite {
             image: textures.player.clone(),
             custom_size: Some(Vec2::new(PLAYER_SIZE, PLAYER_SIZE)),
             ..default()
         },
-        Transform::from_xyz(0.0, -WINDOW_HEIGHT / 2.0 + 50.0, 0.0),
+        Transform::from_xyz(0.0, -window_dims.height / 2.0 + 50.0, 0.0),
         Player,
     ));
 
@@ -71,9 +83,9 @@ pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: 
 }
 
 /// Spawn the enemy formation
-pub fn spawn_enemies(mut commands: Commands, textures: Res<GameTextures>) {
+pub fn spawn_enemies(mut commands: Commands, textures: Res<GameTextures>, window_dims: Res<WindowDimensions>) {
     let start_x = -(ENEMY_COLS as f32 - 1.0) * ENEMY_SPACING / 2.0;
-    let start_y = WINDOW_HEIGHT / 2.0 - 100.0;
+    let start_y = window_dims.height / 2.0 - 100.0;
 
     for row in 0..ENEMY_ROWS {
         for col in 0..ENEMY_COLS {

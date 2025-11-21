@@ -52,7 +52,11 @@ pub fn move_stars(
     mut commands: Commands,
     mut query: Query<(Entity, &mut Transform, &mut Sprite, &mut Star, &Velocity)>,
     time: Res<Time>,
+    window_dims: Res<WindowDimensions>,
 ) {
+    // Calculate max distance based on current window dimensions
+    let max_distance = ((window_dims.width / 2.0).powi(2) + (window_dims.height / 2.0).powi(2)).sqrt();
+    
     for (entity, mut transform, mut sprite, mut star, velocity) in query.iter_mut() {
         // Move star
         transform.translation.x += velocity.x * time.delta_secs();
@@ -62,7 +66,7 @@ pub fn move_stars(
         star.distance_from_center = (transform.translation.x.powi(2) + transform.translation.y.powi(2)).sqrt();
 
         // Calculate progress based on distance (0.0 at center, 1.0 at max distance)
-        let progress = (star.distance_from_center / STAR_MAX_DISTANCE).min(1.0);
+        let progress = (star.distance_from_center / max_distance).min(1.0);
 
         // Increase size as star moves outward
         let size = STAR_MIN_SIZE + (STAR_MAX_SIZE - STAR_MIN_SIZE) * progress;
@@ -73,8 +77,8 @@ pub fn move_stars(
         sprite.color = Color::srgb(brightness, brightness, brightness);
 
         // Despawn if off-screen
-        if transform.translation.x.abs() > WINDOW_WIDTH / 2.0 + 10.0
-            || transform.translation.y.abs() > WINDOW_HEIGHT / 2.0 + 10.0
+        if transform.translation.x.abs() > window_dims.width / 2.0 + 10.0
+            || transform.translation.y.abs() > window_dims.height / 2.0 + 10.0
         {
             commands.entity(entity).despawn();
         }

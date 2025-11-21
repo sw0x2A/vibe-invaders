@@ -1,11 +1,10 @@
 use bevy::prelude::*;
 
 use crate::components::*;
-use crate::constants::*;
 use crate::resources::*;
 
 /// Setup start screen
-pub fn setup_start_screen(mut commands: Commands) {
+pub fn setup_start_screen(mut commands: Commands, window_dims: Res<WindowDimensions>) {
     // Title text
     commands.spawn((
         Text::new("VIBE INVADERS"),
@@ -18,7 +17,7 @@ pub fn setup_start_screen(mut commands: Commands) {
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(150.0),
-            left: Val::Px(WINDOW_WIDTH / 2.0 - 200.0),
+            left: Val::Px(window_dims.width / 2.0 - 200.0),
             ..default()
         },
         StartScreenUI,
@@ -36,7 +35,7 @@ pub fn setup_start_screen(mut commands: Commands) {
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(300.0),
-            left: Val::Px(WINDOW_WIDTH / 2.0 - 150.0),
+            left: Val::Px(window_dims.width / 2.0 - 150.0),
             ..default()
         },
         StartScreenUI,
@@ -54,7 +53,7 @@ pub fn setup_start_screen(mut commands: Commands) {
         Node {
             position_type: PositionType::Absolute,
             top: Val::Px(400.0),
-            left: Val::Px(WINDOW_WIDTH / 2.0 - 150.0),
+            left: Val::Px(window_dims.width / 2.0 - 150.0),
             ..default()
         },
         StartScreenUI,
@@ -79,7 +78,19 @@ pub fn cleanup_start_screen(mut commands: Commands, query: Query<Entity, With<St
 }
 
 /// Setup game over screen
-pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>) {
+pub fn setup_game_over_screen(
+    mut commands: Commands, 
+    game_state: Res<GameState>, 
+    mut high_scores: ResMut<HighScores>,
+    mut game_over_timer: ResMut<GameOverTimer>,
+    window_dims: Res<WindowDimensions>,
+) {
+    // Reset timer
+    game_over_timer.reset();
+    
+    // Add current score to high scores
+    high_scores.add_score(game_state.score);
+    
     let (title, title_color) = if game_state.victory {
         ("VICTORY!", Color::srgb(0.0, 1.0, 0.0))
     } else {
@@ -97,8 +108,8 @@ pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>
         TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
-            top: Val::Px(150.0),
-            left: Val::Px(WINDOW_WIDTH / 2.0 - 180.0),
+            top: Val::Px(50.0),
+            left: Val::Px(window_dims.width / 2.0 - 180.0),
             ..default()
         },
         GameOverUI,
@@ -115,26 +126,73 @@ pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>
         TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
-            top: Val::Px(250.0),
-            left: Val::Px(WINDOW_WIDTH / 2.0 - 150.0),
+            top: Val::Px(130.0),
+            left: Val::Px(window_dims.width / 2.0 - 150.0),
             ..default()
         },
         GameOverUI,
     ));
 
+    // High scores title
+    commands.spawn((
+        Text::new("HIGH SCORES"),
+        TextFont {
+            font_size: 35.0,
+            ..default()
+        },
+        TextColor(Color::srgb(1.0, 0.84, 0.0)),
+        TextLayout::default(),
+        Node {
+            position_type: PositionType::Absolute,
+            top: Val::Px(200.0),
+            left: Val::Px(window_dims.width / 2.0 - 100.0),
+            ..default()
+        },
+        GameOverUI,
+    ));
+
+    // Display top 5 scores
+    let top_scores = high_scores.get_top_scores();
+    for (i, score_entry) in top_scores.iter().enumerate() {
+        let y_pos = 250.0 + i as f32 * 40.0;
+        let score_text = format!("{}. {}", i + 1, score_entry.score);
+        let color = if score_entry.is_current {
+            Color::srgb(0.0, 1.0, 0.5) // Highlight current score
+        } else {
+            Color::WHITE
+        };
+        
+        commands.spawn((
+            Text::new(score_text),
+            TextFont {
+                font_size: 28.0,
+                ..default()
+            },
+            TextColor(color),
+            TextLayout::default(),
+            Node {
+                position_type: PositionType::Absolute,
+                top: Val::Px(y_pos),
+                left: Val::Px(window_dims.width / 2.0 - 60.0),
+                ..default()
+            },
+            GameOverUI,
+        ));
+    }
+
     // Restart text
     commands.spawn((
         Text::new("Press SPACE to Restart"),
         TextFont {
-            font_size: 30.0,
+            font_size: 25.0,
             ..default()
         },
         TextColor(Color::srgb(0.7, 0.7, 0.7)),
         TextLayout::default(),
         Node {
             position_type: PositionType::Absolute,
-            top: Val::Px(350.0),
-            left: Val::Px(WINDOW_WIDTH / 2.0 - 180.0),
+            top: Val::Px(window_dims.height - 80.0),
+            left: Val::Px(window_dims.width / 2.0 - 150.0),
             ..default()
         },
         GameOverUI,
@@ -145,8 +203,14 @@ pub fn setup_game_over_screen(mut commands: Commands, game_state: Res<GameState>
 pub fn game_over_screen_input(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut next_state: ResMut<NextState<GamePhase>>,
+    mut game_over_timer: ResMut<GameOverTimer>,
+    time: Res<Time>,
 ) {
-    if keyboard_input.just_pressed(KeyCode::Space) {
+    // Update timer
+    game_over_timer.elapsed += time.delta_secs();
+    
+    // Only allow restart after delay
+    if keyboard_input.just_pressed(KeyCode::Space) && game_over_timer.can_restart() {
         next_state.set(GamePhase::Playing);
     }
 }
