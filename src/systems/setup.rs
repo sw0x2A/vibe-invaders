@@ -26,13 +26,14 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         enemy_shoot: asset_server.load("sounds/enemy_shoot.wav"),
         enemy_destroyed: asset_server.load("sounds/enemy_destroyed.wav"),
         player_destroyed: asset_server.load("sounds/player_destroyed.wav"),
+        game_music: asset_server.load("sounds/game_music.wav"),
     };
     
     commands.insert_resource(audio);
 }
 
 /// Spawn the player ship and score UI
-pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>) {
+pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>, audio: Res<GameAudio>) {
     commands.spawn((
         Sprite {
             image: textures.player.clone(),
@@ -59,6 +60,13 @@ pub fn spawn_player(mut commands: Commands, textures: Res<GameTextures>) {
             ..default()
         },
         Score,
+    ));
+    
+    // Start background music
+    commands.spawn((
+        AudioPlayer::new(audio.game_music.clone()),
+        PlaybackSettings::LOOP,
+        BackgroundMusic,
     ));
 }
 

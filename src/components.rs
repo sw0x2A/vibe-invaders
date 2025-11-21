@@ -49,3 +49,7 @@ pub struct ExplosionParticle {
     pub lifetime: f32,
     pub max_lifetime: f32,
 }
+
+/// Background music component marker
+#[derive(Component)]
+pub struct BackgroundMusic;
