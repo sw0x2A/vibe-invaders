@@ -16,16 +16,16 @@ pub fn spawn_stars(
     if game_state.star_spawn_timer >= STAR_SPAWN_INTERVAL {
         game_state.star_spawn_timer = 0.0;
 
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         
         // Random angle for star direction
-        let angle = rng.gen_range(0.0..std::f32::consts::TAU);
+        let angle = rng.random_range(0.0..std::f32::consts::TAU);
         
         // Random speed variation
-        let speed = STAR_BASE_SPEED * rng.gen_range(0.5..1.5);
+        let speed = STAR_BASE_SPEED * rng.random_range(0.5..1.5);
         
         // Spawn star at center with slight random offset
-        let offset = rng.gen_range(-10.0..10.0);
+        let offset = rng.random_range(-10.0..10.0);
         let x = offset * angle.cos();
         let y = offset * angle.sin();
 

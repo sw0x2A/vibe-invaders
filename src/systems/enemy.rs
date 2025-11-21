@@ -56,8 +56,8 @@ pub fn enemy_shoot(
         // Pick a random enemy to shoot
         let enemies: Vec<&Transform> = query.iter().collect();
         if !enemies.is_empty() {
-            let mut rng = rand::thread_rng();
-            let index = rng.gen_range(0..enemies.len());
+            let mut rng = rand::rng();
+            let index = rng.random_range(0..enemies.len());
             let enemy_transform = enemies[index];
 
             commands.spawn((
