@@ -6,7 +6,6 @@ mod systems;
 use bevy::prelude::*;
 use bevy::window::MonitorSelection;
 
-use constants::*;
 use resources::*;
 use systems::*;
 
@@ -16,7 +15,6 @@ fn main() {
             .set(WindowPlugin {
                 primary_window: Some(Window {
                     title: "Vibe Invaders".to_string(),
-                    resolution: (WINDOW_WIDTH as u32, WINDOW_HEIGHT as u32).into(),
                     resizable: false,
                     mode: bevy::window::WindowMode::BorderlessFullscreen(MonitorSelection::Primary),
                     ..default()
@@ -30,7 +28,10 @@ fn main() {
         )
         .init_state::<GamePhase>()
         .init_resource::<GameState>()
-        .add_systems(Startup, setup)
+        .init_resource::<WindowDimensions>()
+        .init_resource::<HighScores>()
+        .init_resource::<GameOverTimer>()
+        .add_systems(Startup, (setup, initialize_window_dimensions))
         // Start screen systems
         .add_systems(OnEnter(GamePhase::StartScreen), setup_start_screen)
         .add_systems(Update, start_screen_input.run_if(in_state(GamePhase::StartScreen)))

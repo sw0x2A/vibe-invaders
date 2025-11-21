@@ -91,9 +91,10 @@ pub fn enemy_shoot(
 pub fn check_enemy_reached_bottom(
     query: Query<&Transform, With<Enemy>>,
     mut next_state: ResMut<NextState<GamePhase>>,
+    window_dims: Res<WindowDimensions>,
 ) {
     for transform in query.iter() {
-        if transform.translation.y < -WINDOW_HEIGHT / 2.0 + 50.0 {
+        if transform.translation.y < -window_dims.height / 2.0 + 50.0 {
             next_state.set(GamePhase::GameOver);
             break;
         }
