@@ -4,6 +4,7 @@ mod resources;
 mod systems;
 
 use bevy::prelude::*;
+use bevy::window::MonitorSelection;
 
 use constants::*;
 use resources::*;
@@ -17,6 +18,7 @@ fn main() {
                     title: "Vibe Invaders".to_string(),
                     resolution: (WINDOW_WIDTH as u32, WINDOW_HEIGHT as u32).into(),
                     resizable: false,
+                    mode: bevy::window::WindowMode::BorderlessFullscreen(MonitorSelection::Primary),
                     ..default()
                 }),
                 ..default()
