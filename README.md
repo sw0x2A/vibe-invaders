@@ -44,6 +44,35 @@ cargo build --release
 cargo run --release
 ```
 
+## Web (WASM) Build
+
+The game can be built for the web using WebAssembly.
+
+### Prerequisites for WASM
+- Rust with WASM target:
+  ```bash
+  rustup target add wasm32-unknown-unknown
+  ```
+- Trunk (WASM bundler):
+  ```bash
+  cargo install --locked trunk
+  ```
+
+### Build for Web
+```bash
+trunk build --release
+```
+
+### Run Locally
+```bash
+trunk serve
+```
+Then open http://127.0.0.1:8080 in your browser.
+
+### GitHub Pages Deployment
+
+The game is automatically deployed to GitHub Pages when changes are pushed to the `main` branch. The deployment workflow builds the WASM bundle and publishes it to GitHub Pages.
+
 ## Architecture
 The game follows ECS (Entity Component System) principles using Bevy 0.17.
 
