@@ -30,6 +30,7 @@ features = [
     "wav",
     "default_font",
     "png",
+    "webgl2",
 ]
 
 [profile.dev]
