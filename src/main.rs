@@ -6,6 +6,10 @@ mod systems;
 use bevy::prelude::*;
 #[cfg(not(target_arch = "wasm32"))]
 use bevy::window::MonitorSelection;
+#[cfg(target_arch = "wasm32")]
+use bevy::window::WindowResolution;
+#[cfg(target_arch = "wasm32")]
+use constants::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 use resources::*;
 use systems::*;
@@ -25,6 +29,11 @@ fn main() {
                         ),
                         #[cfg(target_arch = "wasm32")]
                         mode: bevy::window::WindowMode::Windowed,
+                        // For WASM: fit canvas to its parent element and set initial resolution
+                        #[cfg(target_arch = "wasm32")]
+                        resolution: WindowResolution::new(WINDOW_WIDTH as u32, WINDOW_HEIGHT as u32),
+                        #[cfg(target_arch = "wasm32")]
+                        fit_canvas_to_parent: true,
                         ..default()
                     }),
                     ..default()
