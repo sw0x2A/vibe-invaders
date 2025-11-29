@@ -4,6 +4,7 @@ mod resources;
 mod systems;
 
 use bevy::prelude::*;
+#[cfg(not(target_arch = "wasm32"))]
 use bevy::window::MonitorSelection;
 
 use resources::*;
@@ -17,9 +18,13 @@ fn main() {
                     primary_window: Some(Window {
                         title: "Vibe Invaders".to_string(),
                         resizable: false,
+                        // BorderlessFullscreen doesn't work on WASM - use default windowed mode
+                        #[cfg(not(target_arch = "wasm32"))]
                         mode: bevy::window::WindowMode::BorderlessFullscreen(
                             MonitorSelection::Primary,
                         ),
+                        #[cfg(target_arch = "wasm32")]
+                        mode: bevy::window::WindowMode::Windowed,
                         ..default()
                     }),
                     ..default()
