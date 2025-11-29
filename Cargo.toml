@@ -4,7 +4,39 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bevy = { version = "0.17.3", default-features = false, features = [
+rand = "0.9.2"
+
+[dependencies.bevy]
+version = "0.17.3"
+default-features = false
+features = [
+    "bevy_winit",
+    "bevy_core_pipeline",
+    "bevy_render",
+    "bevy_sprite",
+    "bevy_sprite_render",
+    "bevy_text",
+    "bevy_ui",
+    "bevy_ui_render",
+    "bevy_state",
+    "bevy_asset",
+    "bevy_color",
+    "bevy_window",
+    "bevy_camera",
+    "bevy_image",
+    "bevy_mesh",
+    "bevy_shader",
+    "bevy_audio",
+    "wav",
+    "default_font",
+    "png",
+]
+
+# Native-only features (not WASM)
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies.bevy]
+version = "0.17.3"
+default-features = false
+features = [
     "bevy_winit",
     "bevy_core_pipeline",
     "bevy_render",
@@ -28,11 +60,16 @@ bevy = { version = "0.17.3", default-features = false, features = [
     "png",
     "x11",
     "multi_threaded",
-] }
-rand = "0.9.2"
+]
 
 [profile.dev]
 opt-level = 1
 
 [profile.dev.package."*"]
 opt-level = 3
+
+# Optimize WASM release builds for size
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = "thin"
