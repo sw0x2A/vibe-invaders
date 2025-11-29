@@ -7,6 +7,9 @@ applyTo: "**/*.rs"
 ## Rust Edition
 This project uses **Rust 2024 edition**. Ensure all code follows Rust 2024 idioms and features.
 
+## Target Platform
+This project targets **WASM (WebAssembly)** only. All code should be compatible with `wasm32-unknown-unknown` target.
+
 ## Code Style
 - Follow standard Rust formatting conventions (use `rustfmt`)
 - Use meaningful variable and function names that describe their purpose
@@ -34,9 +37,10 @@ This project uses **Rust 2024 edition**. Ensure all code follows Rust 2024 idiom
 ## Dependencies
 - Keep dependencies minimal and focused
 - This project uses:
-  - `bevy = "0.17"` - Game engine (with minimal features enabled)
-  - `rand = "0.8"` - Random number generation for enemy shooting
+  - `bevy = "0.17"` - Game engine (with minimal features for WASM compatibility)
+  - `rand = "0.9"` - Random number generation for enemy shooting
 - When adding dependencies, check for security vulnerabilities using `cargo audit`
+- Ensure all dependencies are WASM-compatible
 
 ## Bevy-Specific Rust Patterns
 - Systems are functions that query entities
@@ -46,11 +50,19 @@ This project uses **Rust 2024 edition**. Ensure all code follows Rust 2024 idiom
 - Components should derive `Component` macro
 - Resources should derive `Resource` macro
 
+## WASM-Specific Considerations
+- No native file system access - use Bevy's asset loading
+- Use `web-sys` for browser-specific functionality if needed
+- Audio uses WAV format (no vorbis on WASM)
+- Window configuration must include `canvas` property for browser targeting
+- Use `fit_canvas_to_parent: true` for responsive canvas sizing
+
 ## Performance
 - Avoid allocations in hot paths (systems that run every frame)
 - Use `Vec` pre-allocation with `with_capacity()` when size is known
 - Bevy handles most performance optimizations automatically
 - Profile before optimizing
+- WASM builds use WebGL2 which has some limitations compared to native
 
 ## Common Patterns
 ```rust

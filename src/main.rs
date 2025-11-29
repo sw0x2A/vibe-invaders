@@ -4,11 +4,7 @@ mod resources;
 mod systems;
 
 use bevy::prelude::*;
-#[cfg(not(target_arch = "wasm32"))]
-use bevy::window::MonitorSelection;
-#[cfg(target_arch = "wasm32")]
 use bevy::window::WindowResolution;
-#[cfg(target_arch = "wasm32")]
 use constants::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 use resources::*;
@@ -22,18 +18,14 @@ fn main() {
                     primary_window: Some(Window {
                         title: "Vibe Invaders".to_string(),
                         resizable: false,
-                        // BorderlessFullscreen doesn't work on WASM - use default windowed mode
-                        #[cfg(not(target_arch = "wasm32"))]
-                        mode: bevy::window::WindowMode::BorderlessFullscreen(
-                            MonitorSelection::Primary,
-                        ),
-                        #[cfg(target_arch = "wasm32")]
+                        // Use windowed mode for WASM compatibility
                         mode: bevy::window::WindowMode::Windowed,
-                        // For WASM: fit canvas to its parent element and set initial resolution
-                        #[cfg(target_arch = "wasm32")]
+                        // Set explicit resolution
                         resolution: WindowResolution::new(WINDOW_WIDTH as u32, WINDOW_HEIGHT as u32),
-                        #[cfg(target_arch = "wasm32")]
+                        // WASM canvas configuration
+                        canvas: Some("#bevy-canvas".to_string()),
                         fit_canvas_to_parent: true,
+                        prevent_default_event_handling: true,
                         ..default()
                     }),
                     ..default()

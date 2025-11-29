@@ -4,7 +4,10 @@ Space Invaders clone in Rust using Bevy engine
 ## Description
 A classic Space Invaders game implemented in Rust using the Bevy game engine, following Entity Component System (ECS) architecture principles.
 
-Built with **Rust 2024 edition** and **Bevy 0.17**, featuring a clean modular architecture with separated concerns.
+Built with **Rust 2024 edition** and **Bevy 0.17**, designed specifically for **WASM (WebAssembly)** deployment.
+
+## Play Online
+The game is deployed at: https://vibe-invaders.00101010.org/
 
 ## Features
 - **Player-controlled ship**: Move left/right with arrow keys or A/D
@@ -24,32 +27,14 @@ Built with **Rust 2024 edition** and **Bevy 0.17**, featuring a clean modular ar
 - **Arrow Keys** or **A/D**: Move left/right
 - **SPACE**: Shoot
 
-## Building and Running
+## Building and Running (WASM)
+
+This project is designed for WASM deployment only.
 
 ### Prerequisites
 - Rust (latest stable version)
 - Cargo
-- ALSA development libraries (Linux only):
-  ```bash
-  sudo apt-get install libasound2-dev pkg-config
-  ```
-
-### Build
-```bash
-cargo build --release
-```
-
-### Run
-```bash
-cargo run --release
-```
-
-## Web (WASM) Build
-
-The game can be built for the web using WebAssembly.
-
-### Prerequisites for WASM
-- Rust with WASM target:
+- Rust WASM target:
   ```bash
   rustup target add wasm32-unknown-unknown
   ```
@@ -106,7 +91,8 @@ For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Technical Details
 - Rust Edition: 2024
-- Bevy Version: 0.17 (with bevy_audio and vorbis features)
+- Bevy Version: 0.17
+- Target Platform: WASM (WebAssembly)
 - Window size: 800×600
 - Player speed: 300 units/second
 - Bullet speed: 400 units/second
@@ -116,6 +102,13 @@ For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md).
 - Star spawn rate: Every 0.05 seconds
 - Explosion particles: 20 per explosion
 - Audio formats: WAV for sound effects
+
+## WASM Canvas Configuration
+The game uses a specific canvas element (`#bevy-canvas`) for proper rendering in browsers. Key configuration:
+- Canvas element with ID `bevy-canvas` in `index.html`
+- `fit_canvas_to_parent: true` for responsive sizing
+- `prevent_default_event_handling: true` for proper keyboard input handling
+- Fixed resolution of 800×600 with responsive CSS scaling
 
 ## Future Enhancements
 - Lives system
