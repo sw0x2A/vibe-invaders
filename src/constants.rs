@@ -1,7 +1,5 @@
-// Window and display constants (kept for reference)
-#[allow(dead_code)]
+// Window and display constants
 pub const WINDOW_WIDTH: f32 = 800.0;
-#[allow(dead_code)]
 pub const WINDOW_HEIGHT: f32 = 600.0;
 
 // Player constants

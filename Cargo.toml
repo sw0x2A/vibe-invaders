@@ -32,10 +32,6 @@ features = [
     "png",
 ]
 
-# Native-only features (x11, multi_threaded, vorbis are not available on WASM)
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-bevy = { version = "0.17.3", default-features = false, features = ["x11", "multi_threaded", "vorbis"] }
-
 [profile.dev]
 opt-level = 1
 
