@@ -65,12 +65,18 @@
         <div>Loading Vibe Invaders...</div>
     </div>
     <script type="module">
-        // Hide loading screen once the game starts
+        // Hide loading screen once the game starts (with timeout)
         window.addEventListener('load', () => {
+            let attempts = 0;
+            const maxAttempts = 300; // 30 seconds max (100ms * 300)
             const checkCanvas = setInterval(() => {
+                attempts++;
                 const canvas = document.querySelector('canvas');
                 if (canvas) {
                     document.getElementById('loading').style.display = 'none';
+                    clearInterval(checkCanvas);
+                } else if (attempts >= maxAttempts) {
+                    document.getElementById('loading').innerHTML = '<div>Failed to load game. Please refresh the page.</div>';
                     clearInterval(checkCanvas);
                 }
             }, 100);
