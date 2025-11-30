@@ -61,6 +61,43 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    <script>
+        // AudioContext resume workaround for browser autoplay policy
+        // Browsers require user gesture before AudioContext can start
+        // This script intercepts AudioContext creation and resumes them on user input
+        const audioContextList = [];
+        
+        // Patch AudioContext constructor to track all instances
+        const OriginalAudioContext = window.AudioContext || window.webkitAudioContext;
+        if (OriginalAudioContext) {
+            window.AudioContext = function(...args) {
+                const context = new OriginalAudioContext(...args);
+                audioContextList.push(context);
+                return context;
+            };
+            // Preserve prototype chain
+            window.AudioContext.prototype = OriginalAudioContext.prototype;
+        }
+        
+        // Resume all AudioContexts on user interaction
+        const userInputEventNames = ["mousedown", "pointerdown", "touchstart", "keydown"];
+        
+        function resumeAudioContexts() {
+            audioContextList.forEach(context => {
+                if (context.state !== "running") {
+                    context.resume();
+                }
+            });
+            // Remove listeners after first interaction
+            userInputEventNames.forEach(eventName => {
+                document.removeEventListener(eventName, resumeAudioContexts);
+            });
+        }
+        
+        userInputEventNames.forEach(eventName => {
+            document.addEventListener(eventName, resumeAudioContexts);
+        });
+    </script>
 </head>
 <body>
     <canvas id="bevy-canvas"></canvas>
