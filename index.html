@@ -70,13 +70,20 @@
         // Patch AudioContext constructor to track all instances
         const OriginalAudioContext = window.AudioContext || window.webkitAudioContext;
         if (OriginalAudioContext) {
-            window.AudioContext = function(...args) {
+            const patchedConstructor = function(...args) {
                 const context = new OriginalAudioContext(...args);
                 audioContextList.push(context);
                 return context;
             };
-            // Preserve prototype chain
-            window.AudioContext.prototype = OriginalAudioContext.prototype;
+            // Copy static properties and preserve prototype chain
+            Object.setPrototypeOf(patchedConstructor, OriginalAudioContext);
+            patchedConstructor.prototype = OriginalAudioContext.prototype;
+            
+            // Apply patch to both AudioContext and webkitAudioContext if needed
+            window.AudioContext = patchedConstructor;
+            if (window.webkitAudioContext) {
+                window.webkitAudioContext = patchedConstructor;
+            }
         }
         
         // Resume all AudioContexts on user interaction
@@ -84,8 +91,13 @@
         
         function resumeAudioContexts() {
             audioContextList.forEach(context => {
-                if (context.state !== "running") {
-                    context.resume();
+                // Only attempt to resume if context is not running and not closed
+                if (context.state === "suspended") {
+                    try {
+                        context.resume();
+                    } catch (e) {
+                        // Ignore errors from closed or invalid contexts
+                    }
                 }
             });
             // Remove listeners after first interaction
