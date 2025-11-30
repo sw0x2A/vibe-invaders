@@ -1,13 +1,18 @@
 # vibe-invaders
+
+> **🤖 100% Vibe-Coded, AI-Generated**  
+> Everything in this repository has been created entirely by AI using simple, non-technical language prompts. No technical jargon or debug hints were used in the development process.
+
+**🎮 [Play the Game](https://vibe-invaders.00101010.org/)**
+
+---
+
 Space Invaders clone in Rust using Bevy engine
 
 ## Description
 A classic Space Invaders game implemented in Rust using the Bevy game engine, following Entity Component System (ECS) architecture principles.
 
 Built with **Rust 2024 edition** and **Bevy 0.17**, designed specifically for **WASM (WebAssembly)** deployment.
-
-## Play Online
-The game is deployed at: https://vibe-invaders.00101010.org/
 
 ## Features
 - **Player-controlled ship**: Move left/right with arrow keys or A/D
