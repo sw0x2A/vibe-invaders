@@ -124,6 +124,14 @@ For more detailed, context-specific instructions, see:
 - Score tracking (10 points per enemy)
 - Game over conditions (enemies reach bottom or player hit)
 
+## Changelog Maintenance
+When creating PRs, always update CHANGELOG.md:
+1. Add a new version section at the top (increment minor version: 0.X.0)
+2. Update the version in Cargo.toml to match
+3. Document changes under appropriate categories: Added, Changed, Fixed, Removed
+4. Include the date in YYYY-MM-DD format
+5. Follow [Keep a Changelog](https://keepachangelog.com/) format
+
 ## Getting Help
 - Check ARCHITECTURE.md for ECS pattern details
 - Review existing systems for implementation examples
